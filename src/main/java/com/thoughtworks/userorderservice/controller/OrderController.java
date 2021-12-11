@@ -1,8 +1,9 @@
 package com.thoughtworks.userorderservice.controller;
 
 import com.thoughtworks.userorderservice.controller.request.OrderCreateRequest;
-import com.thoughtworks.userorderservice.controller.response.OrderCreateResponse;
+import com.thoughtworks.userorderservice.controller.response.Response;
 import com.thoughtworks.userorderservice.service.OrderService;
+import com.thoughtworks.userorderservice.service.dto.OrderDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +21,9 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderCreateResponse createOrder(
+    public Response<OrderDTO> createOrder(
         @RequestBody OrderCreateRequest orderCreateRequest
     ) {
-        return new OrderCreateResponse(orderService.createOrder(orderCreateRequest));
+        return Response.success(orderService.createOrder(orderCreateRequest));
     }
 }

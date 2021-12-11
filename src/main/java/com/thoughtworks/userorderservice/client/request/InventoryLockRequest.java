@@ -1,4 +1,4 @@
-package com.thoughtworks.userorderservice.controller.request;
+package com.thoughtworks.userorderservice.client.request;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -6,10 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Data
-public class OrderCreateRequest {
-    private List<Integer> foodIds;
+public class InventoryLockRequest {
+    private List<Integer> ids;
 }

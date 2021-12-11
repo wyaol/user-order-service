@@ -1,7 +1,9 @@
 package com.thoughtworks.userorderservice.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.thoughtworks.userorderservice.dto.Detail;
 import com.thoughtworks.userorderservice.dto.OrderStatus;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderDTO {
-    private Detail[] details;
+    private List<Detail> details;
     private Integer totalPrice;
     private Integer deduction;
     private OrderStatus orderStatus;

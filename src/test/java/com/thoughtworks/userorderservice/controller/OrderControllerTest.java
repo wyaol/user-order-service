@@ -1,6 +1,7 @@
 package com.thoughtworks.userorderservice.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.userorderservice.controller.request.OrderCreateRequest;
 import com.thoughtworks.userorderservice.dto.OrderStatus;
 import com.thoughtworks.userorderservice.service.OrderService;
+import com.thoughtworks.userorderservice.service.dto.OrderDTO;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,17 +41,14 @@ class OrderControllerTest {
 
     @Test
     void shouldCreateOrderSuccess() throws Exception {
-        when(orderService.createOrder(any())).thenReturn(7865);
+        when(orderService.createOrder(any())).thenReturn(OrderDTO.builder().build());
 
         mockMvc.perform(post("/orders")
             .contentType(MediaType.APPLICATION_JSON)
             .content(
                 objectMapper.writeValueAsString(
                     OrderCreateRequest.builder()
-                        .orderStatus(OrderStatus.CREATED)
-                        .deduction(0)
                         .foodIds(List.of(1, 2, 3))
-                        .totalPrice(30)
                         .build()
                 )
             ))
