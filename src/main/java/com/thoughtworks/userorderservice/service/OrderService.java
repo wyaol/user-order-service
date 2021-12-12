@@ -1,9 +1,9 @@
 package com.thoughtworks.userorderservice.service;
 
 import com.thoughtworks.userorderservice.client.CommodityServiceClient;
+import com.thoughtworks.userorderservice.dto.OrderDetail;
 import com.thoughtworks.userorderservice.client.request.InventoryLockRequest;
 import com.thoughtworks.userorderservice.controller.request.OrderCreateRequest;
-import com.thoughtworks.userorderservice.dto.Detail;
 import com.thoughtworks.userorderservice.dto.OrderStatus;
 import com.thoughtworks.userorderservice.repository.OrderRepository;
 import com.thoughtworks.userorderservice.repository.entity.OrderEntity;
@@ -22,16 +22,18 @@ public class OrderService {
 
     public OrderDTO createOrder(OrderCreateRequest orderCreateRequest) {
 
-        List<Detail> details = commodityServiceClient.lockInventory(
-            InventoryLockRequest.builder().ids(orderCreateRequest.getFoodIds()).build()
+        List<OrderDetail> orderDetails = commodityServiceClient.lockInventory(
+            InventoryLockRequest.builder().
+                inventories(orderCreateRequest.getFoods())
+            .build()
         ).getData();
 
         OrderEntity orderEntity = orderRepository.save(
             OrderEntity.builder()
                 .orderStatus(OrderStatus.CREATED)
                 .deduction(0)
-                .totalPrice(details.stream().map(Detail::getPrice).reduce(0, Integer::sum))
-                .details(details)
+                .totalPrice(orderDetails.stream().map(it -> it.getPrice() * it.getCopies()).reduce(0, Integer::sum))
+                .orderDetails(orderDetails)
                 .build()
         );
         return ObjectMapperUtil.convert(orderEntity, OrderDTO.class);

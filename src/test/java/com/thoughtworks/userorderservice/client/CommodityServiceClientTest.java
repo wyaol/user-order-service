@@ -7,7 +7,8 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.http.trafficlistener.ConsoleNotifyingWiremockNetworkTrafficListener;
 import com.thoughtworks.userorderservice.client.request.InventoryLockRequest;
 import com.thoughtworks.userorderservice.client.response.ClientResponse;
-import com.thoughtworks.userorderservice.dto.Detail;
+import com.thoughtworks.userorderservice.dto.OrderDetail;
+import com.thoughtworks.userorderservice.dto.OrderItem;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -41,11 +42,12 @@ class CommodityServiceClientTest {
 
     @Test
     void shouldLockInventorySuccess() {
-        ClientResponse<List<Detail>> listClientResponse = commodityServiceClient
-            .lockInventory(InventoryLockRequest.builder().build());
+        ClientResponse<List<OrderDetail>> listClientResponse = commodityServiceClient
+            .lockInventory(InventoryLockRequest.builder().inventories(List.of(new OrderItem(123, 1))).build());
         assertEquals("name", listClientResponse.getData().get(0).getName());
         assertEquals(123, listClientResponse.getData().get(0).getId());
         assertEquals("http://127.0.0.1", listClientResponse.getData().get(0).getPicUrl());
         assertEquals(30, listClientResponse.getData().get(0).getPrice());
+        assertEquals(1, listClientResponse.getData().get(0).getCopies());
     }
 }

@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.userorderservice.controller.request.OrderCreateRequest;
-import com.thoughtworks.userorderservice.dto.OrderStatus;
 import com.thoughtworks.userorderservice.service.OrderService;
 import com.thoughtworks.userorderservice.service.dto.OrderDTO;
 import java.util.List;
@@ -48,7 +47,7 @@ class OrderControllerTest {
             .content(
                 objectMapper.writeValueAsString(
                     OrderCreateRequest.builder()
-                        .foodIds(List.of(1, 2, 3))
+                        .foods(List.of())
                         .build()
                 )
             ))

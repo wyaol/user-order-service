@@ -1,5 +1,6 @@
 package com.thoughtworks.userorderservice.client.request;
 
+import com.thoughtworks.userorderservice.dto.OrderItem;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,5 +12,5 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class InventoryLockRequest {
-    private List<Integer> ids;
+    private List<OrderItem> inventories;
 }

@@ -1,6 +1,6 @@
 package com.thoughtworks.userorderservice.repository.entity;
 
-import com.thoughtworks.userorderservice.dto.Detail;
+import com.thoughtworks.userorderservice.dto.OrderDetail;
 import com.thoughtworks.userorderservice.dto.OrderStatus;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import java.util.List;
@@ -36,7 +36,7 @@ public class OrderEntity {
     private Long id;
     @Type(type = "json")
     @Column(columnDefinition = "json" )
-    private List<Detail> details;
+    private List<OrderDetail> orderDetails;
     private Integer totalPrice;
     private Integer deduction;
     private OrderStatus orderStatus;

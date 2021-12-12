@@ -2,7 +2,7 @@ package com.thoughtworks.userorderservice.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.thoughtworks.userorderservice.dto.Detail;
+import com.thoughtworks.userorderservice.dto.OrderDetail;
 import com.thoughtworks.userorderservice.dto.OrderStatus;
 import com.thoughtworks.userorderservice.repository.entity.OrderEntity;
 import java.util.List;
@@ -22,7 +22,7 @@ class OrderRepositoryTest {
     void shouldCreateOrderSuccess() {
         OrderEntity orderEntity1 = OrderEntity.builder()
             .deduction(0)
-            .details(List.of(Detail.builder()
+            .orderDetails(List.of(OrderDetail.builder()
                 .name("name")
                 .picUrl("picUrl")
                 .price(2)

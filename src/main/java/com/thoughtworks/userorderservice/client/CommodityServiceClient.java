@@ -2,7 +2,7 @@ package com.thoughtworks.userorderservice.client;
 
 import com.thoughtworks.userorderservice.client.request.InventoryLockRequest;
 import com.thoughtworks.userorderservice.client.response.ClientResponse;
-import com.thoughtworks.userorderservice.dto.Detail;
+import com.thoughtworks.userorderservice.dto.OrderDetail;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 public interface CommodityServiceClient {
 
     @PostMapping(value = "/inventory-locks")
-    ClientResponse<List<Detail>> lockInventory(InventoryLockRequest inventoryLockRequest);
+    ClientResponse<List<OrderDetail>> lockInventory(InventoryLockRequest inventoryLockRequest);
 
 }

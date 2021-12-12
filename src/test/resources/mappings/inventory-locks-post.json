@@ -1,7 +1,19 @@
 {
   "request": {
     "method": "POST",
-    "url": "/inventory-locks"
+    "url": "/inventory-locks",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "inventories": [
+            {
+              "id": 123,
+              "copies": 1
+            }
+          ]
+        }
+      }
+    ]
   },
   "response": {
     "status": 200,
@@ -13,7 +25,8 @@
           "id": 123,
           "name": "name",
           "price": 30,
-          "picUrl": "http://127.0.0.1"
+          "picUrl": "http://127.0.0.1",
+          "copies": 1
         }
       ]
     },

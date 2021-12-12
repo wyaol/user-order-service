@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class Detail {
+public class OrderItem {
     private Integer id;
-    private String name;
-    private Integer price;
-    private String picUrl;
+    private Integer copies;
 }
