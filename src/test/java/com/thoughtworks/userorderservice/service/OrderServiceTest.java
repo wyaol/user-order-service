@@ -1,5 +1,6 @@
 package com.thoughtworks.userorderservice.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,6 +11,7 @@ import com.thoughtworks.userorderservice.controller.request.OrderCreateRequest;
 import com.thoughtworks.userorderservice.dto.OrderDetail;
 import com.thoughtworks.userorderservice.dto.OrderItem;
 import com.thoughtworks.userorderservice.dto.OrderStatus;
+import com.thoughtworks.userorderservice.exception.InventoryShortageException;
 import com.thoughtworks.userorderservice.repository.OrderRepository;
 import com.thoughtworks.userorderservice.repository.entity.OrderEntity;
 import java.util.List;
@@ -66,5 +68,23 @@ class OrderServiceTest {
                 .orderDetails(orderDetails)
                 .build()
         );
+    }
+
+    @Test
+    void shouldThrowExceptionWhenClientCodeIsNot200() {
+        OrderCreateRequest orderCreateRequest = new OrderCreateRequest(
+            List.of(
+                new OrderItem(124, 1)
+            )
+        );
+
+        when(orderRepository.save(any())).thenReturn(
+            OrderEntity.builder().build()
+        );
+        when(commodityServiceClient.lockInventory(any())).thenReturn(
+            new ClientResponse<>(4008, "Inventory is not enough", null)
+        );
+
+        assertThrows(InventoryShortageException.class, () -> orderService.createOrder(orderCreateRequest));
     }
 }
