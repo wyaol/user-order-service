@@ -1,13 +1,13 @@
 package com.thoughtworks.userorderservice.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.userorderservice.controller.request.OrderCreateRequest;
+import com.thoughtworks.userorderservice.exception.InventoryShortageException;
 import com.thoughtworks.userorderservice.service.OrderService;
 import com.thoughtworks.userorderservice.service.dto.OrderDTO;
 import java.util.List;
@@ -52,6 +52,22 @@ class OrderControllerTest {
                 )
             ))
             .andExpect(status().isCreated());
+    }
+
+    @Test
+    void shouldReturn400WhenCreateOrderSuccessWithInventoryShortage() throws Exception {
+        when(orderService.createOrder(any())).thenThrow(new InventoryShortageException(4008, "Inventory is not enough"));
+
+        mockMvc.perform(post("/orders")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(
+                objectMapper.writeValueAsString(
+                    OrderCreateRequest.builder()
+                        .foods(List.of())
+                        .build()
+                )
+            ))
+            .andExpect(status().isBadRequest());
     }
 
 }

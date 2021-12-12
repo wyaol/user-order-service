@@ -2,10 +2,12 @@ package com.thoughtworks.userorderservice.controller;
 
 import com.thoughtworks.userorderservice.controller.request.OrderCreateRequest;
 import com.thoughtworks.userorderservice.controller.response.Response;
+import com.thoughtworks.userorderservice.exception.BusinessException;
 import com.thoughtworks.userorderservice.service.OrderService;
 import com.thoughtworks.userorderservice.service.dto.OrderDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,5 +27,11 @@ public class OrderController {
         @RequestBody OrderCreateRequest orderCreateRequest
     ) {
         return Response.success(orderService.createOrder(orderCreateRequest));
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response<Object> handlerBusinessException(BusinessException businessException) {
+        return new Response<>(businessException.getCode(), businessException.getMsg(), null);
     }
 }

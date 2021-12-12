@@ -8,7 +8,7 @@ import com.thoughtworks.userorderservice.dto.OrderStatus;
 import com.thoughtworks.userorderservice.repository.OrderRepository;
 import com.thoughtworks.userorderservice.repository.entity.OrderEntity;
 import com.thoughtworks.userorderservice.service.dto.OrderDTO;
-import com.thoughtworks.userorderservice.utils.ObjectMapperUtil;
+import com.thoughtworks.userorderservice.util.ObjectMapperUtil;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

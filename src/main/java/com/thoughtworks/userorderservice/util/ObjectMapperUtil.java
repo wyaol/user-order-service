@@ -1,4 +1,4 @@
-package com.thoughtworks.userorderservice.utils;
+package com.thoughtworks.userorderservice.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
