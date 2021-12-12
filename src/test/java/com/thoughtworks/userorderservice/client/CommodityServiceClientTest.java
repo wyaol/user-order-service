@@ -1,6 +1,7 @@
 package com.thoughtworks.userorderservice.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
@@ -9,6 +10,7 @@ import com.thoughtworks.userorderservice.client.request.InventoryLockRequest;
 import com.thoughtworks.userorderservice.client.response.ClientResponse;
 import com.thoughtworks.userorderservice.dto.OrderDetail;
 import com.thoughtworks.userorderservice.dto.OrderItem;
+import com.thoughtworks.userorderservice.exception.ThirdServiceException;
 import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -43,11 +45,20 @@ class CommodityServiceClientTest {
     @Test
     void shouldLockInventorySuccess() {
         ClientResponse<List<OrderDetail>> listClientResponse = commodityServiceClient
-            .lockInventory(InventoryLockRequest.builder().inventories(List.of(new OrderItem(123, 1))).build());
+            .lockInventory(
+                InventoryLockRequest.builder().inventories(List.of(new OrderItem(123, 1))).build());
         assertEquals("name", listClientResponse.getData().get(0).getName());
         assertEquals(123, listClientResponse.getData().get(0).getId());
         assertEquals("http://127.0.0.1", listClientResponse.getData().get(0).getPicUrl());
         assertEquals(30, listClientResponse.getData().get(0).getPrice());
         assertEquals(1, listClientResponse.getData().get(0).getCopies());
+    }
+
+    @Test
+    void shouldThrowThirdServiceExceptionWhenResponseCodeIsNot200() {
+        InventoryLockRequest build = InventoryLockRequest.builder()
+            .inventories(List.of(new OrderItem(124, 1))).build();
+        assertThrows(ThirdServiceException.class, () -> commodityServiceClient
+            .lockInventory(build));
     }
 }

@@ -1,0 +1,25 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/inventory-locks",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "inventories": [
+            {
+              "id": 124,
+              "copies": 1
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 500,
+    "jsonBody": {},
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
