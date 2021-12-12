@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class Detail {
+    private Integer id;
     private String name;
     private Integer price;
     private String picUrl;
