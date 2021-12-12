@@ -8,8 +8,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.userorderservice.controller.request.OrderCreateRequest;
 import com.thoughtworks.userorderservice.exception.InventoryShortageException;
+import com.thoughtworks.userorderservice.exception.ThirdServiceException;
 import com.thoughtworks.userorderservice.service.OrderService;
 import com.thoughtworks.userorderservice.service.dto.OrderDTO;
+import feign.FeignException;
+import feign.FeignException.FeignServerException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +58,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void shouldReturn400WhenCreateOrderSuccessWithInventoryShortage() throws Exception {
+    void shouldReturn400WhenCreateOrderFailWithInventoryShortage() throws Exception {
         when(orderService.createOrder(any())).thenThrow(new InventoryShortageException(4008, "Inventory is not enough"));
 
         mockMvc.perform(post("/orders")
@@ -68,6 +71,22 @@ class OrderControllerTest {
                 )
             ))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn500WhenCreateOrderFailWithThirdServiceError() throws Exception {
+        when(orderService.createOrder(any())).thenThrow(new ThirdServiceException());
+
+        mockMvc.perform(post("/orders")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(
+                objectMapper.writeValueAsString(
+                    OrderCreateRequest.builder()
+                        .foods(List.of())
+                        .build()
+                )
+            ))
+            .andExpect(status().is5xxServerError());
     }
 
 }

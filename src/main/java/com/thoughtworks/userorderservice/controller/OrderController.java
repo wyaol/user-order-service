@@ -3,6 +3,7 @@ package com.thoughtworks.userorderservice.controller;
 import com.thoughtworks.userorderservice.controller.request.OrderCreateRequest;
 import com.thoughtworks.userorderservice.controller.response.Response;
 import com.thoughtworks.userorderservice.exception.BusinessException;
+import com.thoughtworks.userorderservice.exception.ServiceErrorException;
 import com.thoughtworks.userorderservice.service.OrderService;
 import com.thoughtworks.userorderservice.service.dto.OrderDTO;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,11 @@ public class OrderController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Response<Object> handlerBusinessException(BusinessException businessException) {
         return new Response<>(businessException.getCode(), businessException.getMsg(), null);
+    }
+
+    @ExceptionHandler(ServiceErrorException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response<Object> handlerBusinessException(ServiceErrorException serviceErrorException) {
+        return new Response<>(5000, "unknown error", null);
     }
 }
