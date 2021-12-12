@@ -6,6 +6,8 @@ create table t_order
     orderDetails      text,
     order_status integer,
     total_price  integer,
+    user_id  integer,
+    merchant_id  integer,
     update_time  bigint,
     primary key (id)
 );

@@ -40,6 +40,8 @@ public class OrderEntity {
     private Integer totalPrice;
     private Integer deduction;
     private OrderStatus orderStatus;
+    private Integer userid;
+    private Integer merchantId;
     @CreatedDate
     private Long createTime;
     @LastModifiedDate

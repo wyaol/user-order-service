@@ -28,7 +28,7 @@ public class OrderService {
     );
     private static final Integer COMMODITY_SERVICE_SUCCESS_CODE = 0;
 
-    public OrderDTO createOrder(OrderCreateRequest orderCreateRequest) {
+    public OrderDTO createOrder(OrderCreateRequest orderCreateRequest, Integer userId, Integer merchantId) {
 
         ClientResponse<List<OrderDetail>> clientResponse = commodityServiceClient.lockInventory(
             InventoryLockRequest.builder().
@@ -46,6 +46,8 @@ public class OrderService {
 
         OrderEntity orderEntity = orderRepository.save(
             OrderEntity.builder()
+                .userid(userId)
+                .merchantId(merchantId)
                 .orderStatus(OrderStatus.CREATED)
                 .deduction(0)
                 .totalPrice(orderDetails.stream().map(it -> it.getPrice() * it.getCopies())

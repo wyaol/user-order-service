@@ -46,9 +46,11 @@ class OrderControllerTest {
 
     @Test
     void shouldCreateOrderSuccess() throws Exception {
-        when(orderService.createOrder(any())).thenReturn(OrderDTO.builder().build());
+        when(orderService.createOrder(any(), any(), any())).thenReturn(OrderDTO.builder().build());
 
         mockMvc.perform(post("/orders")
+            .header("userId", 123)
+            .header("merchantId", 124)
             .contentType(MediaType.APPLICATION_JSON)
             .content(
                 objectMapper.writeValueAsString(
@@ -62,10 +64,12 @@ class OrderControllerTest {
 
     @Test
     void shouldReturn400WhenCreateOrderFailWithInventoryShortage() throws Exception {
-        when(orderService.createOrder(any()))
+        when(orderService.createOrder(any(), any(), any()))
             .thenThrow(new InventoryShortageException(4008, "Inventory is not enough"));
 
         mockMvc.perform(post("/orders")
+            .header("userId", 123)
+            .header("merchantId", 124)
             .contentType(MediaType.APPLICATION_JSON)
             .content(
                 objectMapper.writeValueAsString(
@@ -79,9 +83,11 @@ class OrderControllerTest {
 
     @Test
     void shouldReturn500WhenCreateOrderFailWithThirdServiceError() throws Exception {
-        when(orderService.createOrder(any())).thenThrow(new ThirdServiceException());
+        when(orderService.createOrder(any(), any(), any())).thenThrow(new ThirdServiceException());
 
         mockMvc.perform(post("/orders")
+            .header("userId", 123)
+            .header("merchantId", 124)
             .contentType(MediaType.APPLICATION_JSON)
             .content(
                 objectMapper.writeValueAsString(
@@ -95,11 +101,13 @@ class OrderControllerTest {
 
     @Test
     void shouldReturn500WhenCreateOrderFailWithThirdServiceTimeOut() throws Exception {
-        when(orderService.createOrder(any()))
+        when(orderService.createOrder(any(), any(), any()))
             .thenThrow(new RetryableException(500, "service connection refused", null, null, Request
                 .create(HttpMethod.GET, "", Map.of(), null, Charset.defaultCharset())));
 
         mockMvc.perform(post("/orders")
+            .header("userId", 123)
+            .header("merchantId", 124)
             .contentType(MediaType.APPLICATION_JSON)
             .content(
                 objectMapper.writeValueAsString(

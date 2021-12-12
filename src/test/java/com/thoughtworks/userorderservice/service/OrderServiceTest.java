@@ -58,10 +58,12 @@ class OrderServiceTest {
                 new OrderItem(1, 1),
                 new OrderItem(2, 1)
             )
-        ));
+        ), 123, 124);
 
         verify(orderRepository).save(
             OrderEntity.builder()
+                .userid(123)
+                .merchantId(124)
                 .deduction(0)
                 .orderStatus(OrderStatus.CREATED)
                 .totalPrice(40)
@@ -85,6 +87,7 @@ class OrderServiceTest {
             new ClientResponse<>(4008, "Inventory is not enough", null)
         );
 
-        assertThrows(InventoryShortageException.class, () -> orderService.createOrder(orderCreateRequest));
+        assertThrows(InventoryShortageException.class,
+            () -> orderService.createOrder(orderCreateRequest, 123, 124));
     }
 }
