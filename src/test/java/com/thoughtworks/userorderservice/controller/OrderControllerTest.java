@@ -11,9 +11,12 @@ import com.thoughtworks.userorderservice.exception.InventoryShortageException;
 import com.thoughtworks.userorderservice.exception.ThirdServiceException;
 import com.thoughtworks.userorderservice.service.OrderService;
 import com.thoughtworks.userorderservice.service.dto.OrderDTO;
-import feign.FeignException;
-import feign.FeignException.FeignServerException;
+import feign.Request;
+import feign.Request.HttpMethod;
+import feign.RetryableException;
+import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -59,7 +62,8 @@ class OrderControllerTest {
 
     @Test
     void shouldReturn400WhenCreateOrderFailWithInventoryShortage() throws Exception {
-        when(orderService.createOrder(any())).thenThrow(new InventoryShortageException(4008, "Inventory is not enough"));
+        when(orderService.createOrder(any()))
+            .thenThrow(new InventoryShortageException(4008, "Inventory is not enough"));
 
         mockMvc.perform(post("/orders")
             .contentType(MediaType.APPLICATION_JSON)
@@ -76,6 +80,24 @@ class OrderControllerTest {
     @Test
     void shouldReturn500WhenCreateOrderFailWithThirdServiceError() throws Exception {
         when(orderService.createOrder(any())).thenThrow(new ThirdServiceException());
+
+        mockMvc.perform(post("/orders")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(
+                objectMapper.writeValueAsString(
+                    OrderCreateRequest.builder()
+                        .foods(List.of())
+                        .build()
+                )
+            ))
+            .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    void shouldReturn500WhenCreateOrderFailWithThirdServiceTimeOut() throws Exception {
+        when(orderService.createOrder(any()))
+            .thenThrow(new RetryableException(500, "service connection refused", null, null, Request
+                .create(HttpMethod.GET, "", Map.of(), null, Charset.defaultCharset())));
 
         mockMvc.perform(post("/orders")
             .contentType(MediaType.APPLICATION_JSON)

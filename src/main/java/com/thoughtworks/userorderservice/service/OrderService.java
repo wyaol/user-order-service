@@ -26,7 +26,7 @@ public class OrderService {
     private static final Map<Integer, Integer> COMMODITY_SERVICE_CODE_TO_SERVICE_CODE = Map.of(
         4008, 4008
     );
-    private static final Integer COMMODITY_SERVICE_SUCCESS_CODE = 200;
+    private static final Integer COMMODITY_SERVICE_SUCCESS_CODE = 0;
 
     public OrderDTO createOrder(OrderCreateRequest orderCreateRequest) {
 

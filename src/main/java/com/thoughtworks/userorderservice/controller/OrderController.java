@@ -6,6 +6,7 @@ import com.thoughtworks.userorderservice.exception.BusinessException;
 import com.thoughtworks.userorderservice.exception.ServiceErrorException;
 import com.thoughtworks.userorderservice.service.OrderService;
 import com.thoughtworks.userorderservice.service.dto.OrderDTO;
+import feign.RetryableException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,9 +37,9 @@ public class OrderController {
         return new Response<>(businessException.getCode(), businessException.getMsg(), null);
     }
 
-    @ExceptionHandler(ServiceErrorException.class)
+    @ExceptionHandler({ServiceErrorException.class, RetryableException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Response<Object> handlerBusinessException(ServiceErrorException serviceErrorException) {
+    public Response<Object> handlerBusinessException(Exception e) {
         return new Response<>(5000, "unknown error", null);
     }
 }
